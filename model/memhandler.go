@@ -6,18 +6,20 @@ type memoryHandler struct {
 	todoMap map[int]*Todo
 }
 
-func (m *memoryHandler) GetTodos() []*Todo {
+func (m *memoryHandler) GetTodos(sessId string) []*Todo {
 	var list []*Todo
 	for _, v := range m.todoMap {
 		//log.Println("v:", v)
-		list = append(list, v)
+		if v.SessionId == sessId {
+			list = append(list, v)
+		}
 	}
 	return list
 }
 
-func (m *memoryHandler) AddTodo(name string) *Todo {
+func (m *memoryHandler) AddTodo(sessId, name string) *Todo {
 	id := len(m.todoMap) + 1
-	todo := &Todo{id, name, false, time.Now()}
+	todo := &Todo{id, sessId, name, false, time.Now()}
 	m.todoMap[id] = todo
 
 	return todo

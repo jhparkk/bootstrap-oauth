@@ -11,14 +11,14 @@ type sqlite3Handler struct {
 	db *gorm.DB
 }
 
-func (s *sqlite3Handler) GetTodos() []*Todo {
+func (s *sqlite3Handler) GetTodos(sessId string) []*Todo {
 	var todos []*Todo
-	s.db.Table("todos").Find(&todos)
+	s.db.Table("todos").Where("session_id = ?", sessId).Find(&todos)
 	return todos
 }
 
-func (s *sqlite3Handler) AddTodo(name string) *Todo {
-	todo := Todo{Name: name, Completed: false, CreateAt: time.Now()}
+func (s *sqlite3Handler) AddTodo(sessId, name string) *Todo {
+	todo := Todo{SessionId: sessId, Name: name, Completed: false, CreateAt: time.Now()}
 	tx := s.db.Table("todos").Create(&todo)
 	if tx.Error != nil {
 		panic(tx.Error)

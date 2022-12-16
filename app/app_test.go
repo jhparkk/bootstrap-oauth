@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -13,7 +14,16 @@ import (
 	"jhpark.sinsiway.com/bootstrap-oauth/model"
 )
 
+func TestCreateSessionKey(t *testing.T) {
+	log.Println("sess_key : ", createSessionKey())
+
+}
+
 func TestTodos(t *testing.T) {
+
+	getSessionId = func(r *http.Request) string {
+		return "test_session_id"
+	}
 
 	assert := assert.New(t)
 	ts := httptest.NewServer(MakeHandler("./test.db"))
@@ -67,7 +77,7 @@ func TestTodos(t *testing.T) {
 		} else if t.Id == id2 {
 			assert.Equal("Test todos2", t.Name)
 		} else {
-			assert.Error(fmt.Errorf("testID should be id1 or id2"))
+			assert.Error(fmt.Errorf("testId should be id1 or id2"))
 		}
 	}
 

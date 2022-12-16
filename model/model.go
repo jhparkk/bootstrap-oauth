@@ -6,14 +6,15 @@ import (
 
 type Todo struct {
 	Id        int       `json:"id" gorm:"column:id;primary key;autoincrement"`
+	SessionId string    `json:"session_id" gorm:"column:session_id; index:session_id_idx,sort:asc"`
 	Name      string    `json:"name" gorm:"column:name"`
 	Completed bool      `json:"completed" gorm:"column:completed"`
 	CreateAt  time.Time `json:"create_at" gorm:"column:create_at"`
 }
 
 type DbHandler interface {
-	GetTodos() []*Todo
-	AddTodo(name string) *Todo
+	GetTodos(sessId string) []*Todo
+	AddTodo(sessId, name string) *Todo
 	RemoveTodo(id int) bool
 	CompleteTodo(id int, complete bool) bool
 	Close()
